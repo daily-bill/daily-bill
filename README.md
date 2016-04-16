@@ -3,6 +3,8 @@
 
 ---
 
----
-
+front:
+ 
+- 包管理: requireJs
+- 技术：jquery+angularJs+bootstrap
 

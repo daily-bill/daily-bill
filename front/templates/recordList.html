@@ -1,0 +1,49 @@
+<div class="page-header">
+    <h1>本周账单</h1>
+</div>
+<div class="weektime col-md-5">
+    <a href="">
+        <i class="fa fa-hand-o-left" title="上一周"></i>
+    </a>
+    <span>当前时间：{{time | date: 'yyyy年MM月dd日'}}</span>
+    <a href="">
+        <i class="fa fa-hand-o-right" title="下一周"></i>
+    </a>
+</div>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th></th>
+            <th ng-repeat="weekday in weekdayList">{{weekday}}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="item in itemList">
+            <td>{{item.name}}</td>
+            <td ng-repeat="content in item.list track by $index">{{content}}</td>
+        </tr>
+        <tr>
+            <td>总计：</td>
+            <td colspan="{{weekdayList.length}}" ng-bind="790"></td>
+        </tr>
+    </tbody>
+</table>
+<div class="row">
+    <h3 class="col-md-12">未缴金额：</h3>
+    <div class="col-md-5">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>姓名</th>
+                <th>金额</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="user in userList">
+                <td ng-bind="user.name"></td>
+                <td ng-bind="user.money"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

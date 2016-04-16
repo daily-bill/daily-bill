@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>伙食经费管理系统</title>
+    <link type="image/x-icon" rel="shortcut icon" href="images/food.png">
+    <link rel="stylesheet" href="public/angular/angular-growl.min.css" />
+    <link rel="stylesheet" href="public/jquery/jquery-ui.css" />
+    <link rel="stylesheet" href="public/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="public/bootstrap/bootstrap-theme.css" />
+    <link rel="stylesheet" href="public/Font-Awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="public/angular/datetimepicker/css/datetimepicker.css" />
+    <link rel="stylesheet" href="stylesheet/style.css" />
+</head>
+<body>
+
+    <nav class="nav navbar-fixed-top">
+        <ul class="list-inline">
+            <li class="home">
+                <a href="#">
+                    <i class="fa fa-home"></i>
+                </a>
+            </li>
+            <li>
+                <a href="" ui-sref="addRecord">
+                    <i class="fa fa-pencil"></i>
+                    <span>录入</span>
+                </a>
+            </li>
+            <li>
+                <a href="" ui-sref="recordList">
+                    <i class="fa fa-list"></i>
+                    <span>本周</span>
+                </a>
+            </li>
+            <li>
+                <a href=""  ui-sref="recordStatistics">
+                    <i class="fa fa-outdent"></i>
+                    <span>汇总</span>
+                </a>
+            </li>
+        </ul>
+        <div class="pull-right mr30" ng-if="isDisplaySave">
+            <a href="" ng-click="save()">保存</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div ui-view></div>
+    </div>
+    <nav class="nav navbar-fixed-bottom text-center">
+        <span>©2016 江左盟</span>
+    </nav>
+    <!--requireJs-->
+    <script src="public/requireJs/require.js" data-main="app.js" defer="defer"></script>
+</body>
+</html>
