@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.daily.bill.dal.purchase.PurchaseDao">
+    <resultMap type="Purchase" id="PurchaseMap">
+        <id column="id" property="id"/>
+        <id column="total_real_pay" property="totalRealPay"/>
+        <id column="pay_at" property="payAt"/>
+    </resultMap>
+    <insert id="save" parameterType="Purchase">
+	INSERT INTO purchase(
+		id,
+		total_real_pay,
+		pay_at
+	)VALUES(
+		#{id},
+		#{totalRealPay},
+		#{payAt}
+	)
+	</insert>
+    <sql id="selectColumn">
+		id,
+		total_real_pay,
+		pay_at
+	</sql>
+    <sql id="selectCondition">
+    	<trim prefix="WHERE" prefixOverrides="AND|OR">
+    		<if test="purchaseIds != null and purchaseIds.size != 0">
+    			AND id IN
+    			<foreach collection="purchaseIds" item="item" open="(" close=")" separator="," >
+    			#{item}
+    			</foreach>
+    		</if>
+    	</trim>
+    </sql>
+    <select id="getListByQuery" parameterType="PurchaseQuery" resultMap="PurchaseMap">
+	SELECT
+        <include refid="selectColumn"/>
+	FROM purchase
+        <include refid="selectCondition"/>
+	ORDER BY id DESC
+    </select>
+    <select id="getNumberByQuery" parameterType="PurchaseQuery" resultType="int">
+	SELECT
+	COUNT(id)
+	FROM purchase
+        <include refid="selectCondition"/>	
+    </select>
+    
+    <select id="getLastPurchase" resultMap="PurchaseMap">
+    	SELECT
+    	<include refid="selectColumn" />
+    	FROM purchase
+    	ORDER BY id DESC
+    	LIMIT 1
+    </select>
+    
+    <select id="getOldestPurchase" resultMap="PurchaseMap">
+    	SELECT
+    	<include refid="selectColumn" />
+    	FROM purchase
+    	ORDER BY id
+    	LIMIT 1
+    </select>
+    
+    <select id="getPurchaseGroupByWeek" parameterType="PurchaseQuery" resultType="PurchaseWeekAmount">
+    	SELECT
+    	UNIX_TIMESTAMP(DATE_ADD('1900-01-01', INTERVAL FLOOR((DATEDIFF(FROM_UNIXTIME(pay_at / 1000), '1900-01-01'))/7)*7 DAY))*1000 AS payStartDate,
+    	UNIX_TIMESTAMP(DATE_ADD('1900-01-01', INTERVAL FLOOR((DATEDIFF(FROM_UNIXTIME(pay_at / 1000), '1900-01-01'))/7)*7+6 DAY))*1000 AS payEndDate,
+    	SUM(total_real_pay) totalPay
+    	FROM purchase
+    	<include refid="selectCondition"/>
+    	GROUP BY FLOOR(DATEDIFF(FROM_UNIXTIME(pay_at / 1000), '1900-01-01')/7)
+    </select>
+</mapper>

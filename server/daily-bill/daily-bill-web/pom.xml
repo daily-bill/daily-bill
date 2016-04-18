@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.daily.bill</groupId>
+    <artifactId>daily-bill</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  
+  <packaging>war</packaging>
+  <artifactId>daily-bill-web</artifactId>
+  <name>daily-bill-web</name>
+  
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  
+  <dependencies>
+	<dependency>
+		<groupId>com.daily.bill</groupId>
+		<artifactId>daily-bill-service</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</dependency>  
+  
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  
+  	<!-- 属性文件配置,为什么要在properties外面包裹一层profiles，是因为为了应对环境的变化，首先需要使用maven属性将这些会变化的部分提取出来 -->
+	<profiles>
+		<profile>
+			<id>test-demo-dev</id> <!-- 定义一个id为dev的profile目的是将开发环境下的配置与其他环境区别开来，有了属性定义还需要父模块的maven-resources-plugin插件编写对资源文件（即不在pom中使用了maven属性的文件）的属性过滤的配置，见父模块 -->
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<!-- 日志定义 -->
+				<daily.bill.log.level>INFO</daily.bill.log.level>
+				<daily.bill.log.path>/soft/dailybilllog</daily.bill.log.path>
+				<daily.bill.db.path>/soft/properties/daily.bill.db.properties</daily.bill.db.path>
+				<daily.bill.conf.path>/soft/properties/daily.bill.conf.properties</daily.bill.conf.path>
+			</properties>
+		</profile>
+	</profiles>
+</project>

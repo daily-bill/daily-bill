@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.daily.bill.dal.paybill.IngredientPayBillDetailDao">
+    <resultMap type="IngredientPayBillDetail" id="IngredientPayBillDetailMap">
+        <id column="id" property="id"/>
+        <id column="purchase_id" property="purchaseId"/>
+        <id column="status" property="status"/>
+        <id column="due_pay" property="duePay"/>
+        <id column="create_at" property="createAt"/>
+        <id column="user_id" property="userId"/>
+        <id column="user_name" property="userName" />
+        <id column="pay_at" property="payAt"/>
+    </resultMap>
+    <insert id="save" parameterType="IngredientPayBillDetail">
+	INSERT INTO ingredient_pay_bill_detail(
+		id,
+		purchase_id,
+		status,
+		due_pay,
+		create_at,
+		user_id,
+		user_name,
+		pay_at
+	)VALUES(
+		#{id},
+		#{purchaseId},
+		#{status},
+		#{duePay},
+		#{createAt},
+		#{userId},
+		#{userName},
+		#{payAt}
+	)
+	</insert>
+    <sql id="selectColumn">
+		ipbd.id,
+		ipbd.purchase_id,
+		ipbd.status,
+		ipbd.due_pay,
+		ipbd.create_at,
+		ipbd.user_id,
+		ipbd.user_name,
+		ipbd.pay_at
+		<if test="isRelationToPurchase != null and isRelationToPurchase == 1">
+		p.total_real_pay purchaseRealPay
+		</if>
+	</sql>
+    <sql id="selectCondition">
+    	<if test="isRelationToPurchase != null and isRelationToPurchase == 1">
+    		INNER JOIN purchase p ON(ipbd.purchase_id = p.id)
+    	</if>
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			<if test="createStartDate != null">
+				AND ipbd.create_at >= #{createStartDate}
+			</if>
+			<if test="createEndDate != null">
+				<![CDATA[
+					AND ipbd.create_at < #{createEndDate}
+				]]>
+			</if>
+			<if test="status != null">
+    			AND ipbd.status = #{status}
+    		</if>
+		</trim>
+    </sql>
+    
+    <select id="getListByQuery" parameterType="IngredientPayBillDetailQuery" resultMap="IngredientPayBillDetailMap">
+	SELECT
+        <include refid="selectColumn"/>
+	FROM ingredient_pay_bill_detail ipbd
+        <include refid="selectCondition"/>
+	ORDER BY ipbd.id DESC
+    </select>
+    
+    <select id="getNumberByQuery" parameterType="IngredientPayBillDetailQuery" resultType="int">
+	SELECT
+	COUNT(ipbd.id)
+	FROM ingredient_pay_bill_detail ipbd
+        <include refid="selectCondition"/>	
+    </select>
+    
+    <select id="getIngredientPayBillDetailAmount" parameterType="IngredientPayBillDetailQuery"  resultType="IngredientPayBillDetailAmount">
+    SELECT
+    	ipbd.user_id userId,
+    	ipbd.user_name userName,
+    	SUM(ipbd.due_pay) totalDuePay
+    FROM ingredient_pay_bill_detail ipbd
+    	<include refid="selectCondition" />
+    <choose>
+    	<when test="groupByType != null and groupByType == 'week'">
+    		GROUP BY ipbd.user_id, ipbd.user_name, FLOOR(DATEDIFF(FROM_UNIXTIME(ipbd.create_at / 1000), '1900-01-01')/7)
+    	</when>
+    	<when test="groupByType != null and groupByType == 'all'">
+    		GROUP BY ipbd.user_id, ipbd.user_name
+    	</when>
+    	<otherwise>
+    	</otherwise>
+    </choose>
+    </select>
+    
+</mapper>

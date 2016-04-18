@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.daily.bill.dal.user.UserDao">
+    <resultMap type="User" id="UserMap">
+        <id column="id" property="id"/>
+        <id column="phone" property="phone"/>
+        <id column="name" property="name"/>
+    </resultMap>
+    <insert id="save" parameterType="User">
+	INSERT INTO user(
+		id,
+		phone,
+		name
+	)VALUES(
+		#{id},
+		#{phone},
+		#{name}
+	)
+	</insert>
+    <sql id="selectColumn">
+		id,
+		phone,
+		name
+	</sql>
+    <sql id="selectCondition">
+    	<trim prefix="WHERE" prefixOverrides="AND|OR">
+    		<if test="userIds != null and userIds.size != 0">
+    			AND id IN
+    			<foreach collection="userIds" open="(" close=")" item="item" separator=",">
+    			#{item}
+    			</foreach>
+    		</if>
+    	</trim>
+    </sql>
+    <select id="getListByQuery" parameterType="UserQuery" resultMap="UserMap">
+	SELECT
+        <include refid="selectColumn"/>
+	FROM user
+        <include refid="selectCondition"/>
+	ORDER BY id
+    </select>
+    <select id="getNumberByQuery" parameterType="UserQuery" resultType="int">
+	SELECT
+	COUNT(id)
+	FROM user
+        <include refid="selectCondition"/>	
+    </select>
+    
+    <select id="getById" parameterType="java.lang.Integer" resultMap="UserMap">
+    SELECT
+    	<include refid="selectColumn" />
+    FROM user
+    WHERE id = #{id}
+    </select>
+</mapper>
