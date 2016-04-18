@@ -31,5 +31,13 @@ define(['modules'], function (app) {
              templateUrl: 'templates/recordStatistics.html',
              controller: 'RecordStatisticsController'
          })
-   })
+   }).config(function (paginationConfig) { //分页配置
+        paginationConfig.directionLinks = true;
+        paginationConfig.boundaryLinks = true; //是否显示首页，尾页选项
+        paginationConfig.maxSize = 5; //最多显示几页的选项
+        paginationConfig.firstText = '首页';
+        paginationConfig.lastText = '尾页';
+        paginationConfig.previousText = '上一页';
+        paginationConfig.nextText = '下一页';
+    });
 });

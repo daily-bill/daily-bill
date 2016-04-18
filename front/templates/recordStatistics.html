@@ -25,4 +25,7 @@
                 </tbody>
             </table>
     </div>
+    <div class="col-md-7 mt10 text-right">
+        <ul pagination ng-model="page" items-per-page="size" total-items="total" ng-change="query()"></ul>
+    </div>
 </div>

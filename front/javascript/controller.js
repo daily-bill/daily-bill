@@ -39,6 +39,10 @@ define(['modules'], function (app) {
 
                 }]
             })
-        }
+        };
+
+        $scope.page = 1;
+        $scope.size = 5;
+        $scope.total = 23;
     })
 })

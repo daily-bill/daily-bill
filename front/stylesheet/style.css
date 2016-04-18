@@ -136,3 +136,8 @@ table{
 .row .btn:hover{
     color: #000;
 }
+
+/*分页*/
+.pagination{
+    font-size:12px;
+}
