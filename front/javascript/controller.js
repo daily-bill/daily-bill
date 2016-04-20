@@ -2,47 +2,201 @@
  * Created by stefan on 16-4-14.
  */
 define(['modules'], function (app) {
-    app.controller('AddRecordController', function ($scope,AddRecordService) {
+    app.controller('purchaseController', function ($scope, $filter, purchaseService, userService, payBillDetailService, commonService) {
         $scope.$emit('displaySave', function () {
         });
         $scope.entity = {};
-        $scope.userList = [
-            {name:'赵桐'},
-            {name:'金融泉'},
-            {name:'王靖坤'},
-            {name:'卢晓勇'}
-        ];
+        var formatPriceFilter = $filter('formatPriceFilter');
+        
+        userService.list().then(
+        	function(res){
+        		$scope.userList = res.data.data;
+        	}
+        );
+        
         $scope.toggleSelect = function (user) {
             user.selected = !user.selected;
         }
-    }).controller('RecordListController', function ($scope,RecordListService) {
-        $scope.time = Date.now();
-        $scope.weekdayList = [
-            "周日","周一","周二","周三","周四","周五","周六"
-        ];
-        $scope.itemList = [
-            {name: "参与人", list: ["赵桐,金融泉","金融泉,王靖坤","金融泉","金融泉","","金融泉",""]},
-            {name: "金额", list: ["100","200","300","50","","100",""]},
-            {name: "人均", list: ["50","100","300","50","","100",""]}
-        ];
-        $scope.userList = [
-            {name:"赵桐", money:100},
-            {name:"金融泉", money:300},
-            {name:"王靖坤", money:50},
-            {name:"卢晓勇", money:200}
-        ]
-    }).controller('RecordStatisticsController', function ($scope,RecordStatisticsService, $modal) {
-        $scope.pay = function () {
-            $modal.open({
-                templateUrl: 'templates/partial/pay.html',
-                controller: ['$scope', function (scope) {
-
-                }]
-            })
+        
+        //录入
+        $scope.save = function(){
+        	$scope.entity.userIds = [];
+        	angular.forEach($scope.userList, function(p, index){
+        		if(p.selected){
+        			$scope.entity.userIds.push(p.id);
+        		}
+        	});
+        	$scope.entity.payAt = $scope.entity.payAt.getTime();
+        	purchaseService.save($scope.entity).then(
+        		function(res){
+        			
+        		},function(rej){
+        			
+        		}
+        	)['finally'](function(){
+        		$scope.entity = {};
+            	angular.forEach($scope.userList, function(p, index){
+            		p.selected = false;
+            	});
+        	});
         };
-
-        $scope.page = 1;
-        $scope.size = 5;
-        $scope.total = 23;
+        
+        //周账单查询
+        $scope.params = {};
+        $scope.weekBillQuery = function(){
+            $scope.weekdayList = ["周日","周一","周二","周三","周四","周五","周六"];
+        	$scope.itemList = [{name : "参与人", list: new Array(7)}, 
+        	                   {name : "金额", list: new Array(7)},
+        	                   {name : "人均", list: new Array(7)}];
+        	
+        	if(!$scope.payWeekBill){  //默认查询本周账单
+        		//获取本周的第一天（周日）以及下周第一天
+            	$scope.time = new Date();
+                $scope.firstDayOfCurWeek = commonService.startOfDate(commonService.dateAdd($scope.time, -($scope.time.getDay())));
+                $scope.endPlusOneDayOfCurWeek = commonService.startOfDate(commonService.dateAdd($scope.firstDayOfCurWeek, 7));
+                $scope.params.createStartDate = $scope.firstDayOfCurWeek.getTime();
+                $scope.params.createEndDate = $scope.endPlusOneDayOfCurWeek.getTime();
+        	}
+        	    	
+        	payBillDetailService.getPayWeekBill($scope.params).then(
+        		function(res){
+        			$scope.payWeekBill = res.data.data;
+        			console.log($scope.payWeekBill);
+        			$scope.totalPayAmount = 0;
+        			//填充itemList并总计金额
+        			angular.forEach($scope.payWeekBill.purchaseList, function(p, index){
+        				//设置参与人信息
+        				var d = new Date(p.payAt);
+        				for(var j = 0; j < p.userList.length; j++){
+        					var u = p.userList[j];
+        					if(j == 0){
+        						$scope.itemList[0].list[d.getDay()] = $scope.itemList[0].list[d.getDay()] ?  $scope.itemList[0].list[d.getDay()] + u.name : u.name;
+        					}else{
+        						$scope.itemList[0].list[d.getDay()] += ", " + u.name;
+        					}
+        				}
+        				//设置金额
+        				$scope.itemList[1].list[d.getDay()] = formatPriceFilter(p.totalRealPay);
+        				//设置人均
+        				$scope.itemList[2].list[d.getDay()] = formatPriceFilter(p.totalRealPay / p.userList.length);
+        				$scope.totalPayAmount += p.totalRealPay;      				
+        			});       			
+        			//未缴款人信息
+        			$scope.userDuePayList = $scope.payWeekBill.userDuePayList;
+        			//控制上一周下一周的按钮
+        			$scope.hasNext = $scope.payWeekBill.hasNext == 1 ? true : false;
+        			$scope.hasPrevious = $scope.payWeekBill.hasPrevious == 1 ? true : false;
+        		}
+        	);       
+        };
+        $scope.weekBillQuery();
+        
+        $scope.previous = function(){
+        	if($scope.hasPrevious){
+        		$scope.params.createEndDate = $scope.params.createStartDate;
+	        	$scope.params.createStartDate = commonService.startOfDate(commonService.dateAdd($scope.params.createEndDate, -7)).getTime();
+	        	$scope.weekBillQuery();
+        	}
+        }
+        
+        $scope.next = function(){
+        	if($scope.hasNext){
+        		$scope.params.createStartDate = $scope.params.createEndDate;
+            	$scope.params.createEndDate = commonService.startOfDate(commonService.dateAdd($scope.params.createStartDate, 7)).getTime();
+            	$scope.weekBillQuery();
+        	}
+        }
+        
+    }).controller('payBillDetailController', function ($scope, $modal, payBillDetailService, commonService) {
+    	$scope.params = {};
+    	$scope.page = 1;
+    	$scope.size = 5;
+    	$scope.getPayBillWeekDetailList = function(){
+    		$scope.params.pageSize = $scope.size;
+    		$scope.params.pageNumber = $scope.page;
+    		payBillDetailService.getDetailAmountByWeek($scope.params).then(
+    			function(res){
+    				$scope.detailList = res.data.data.list;
+    				$scope.total = res.data.data.totalRow; 				
+    			},function(rej){
+    				
+    			}
+    		);
+    	};
+    	$scope.getPayBillWeekDetailList();
+    	
+    	$scope.pay = function(detail){
+    		if(!detail){ //缴所有
+    			$modal.open({
+        			templateUrl:"http://localhost/dailybill/templates/partial/pay.html",
+        			controller:['$scope', function(scope){
+        				scope.params = {};		
+        				scope.processing = false;
+        				scope.params.status = 0;
+        				payBillDetailService.getDetailAmountByAllUser(scope.params).then(
+        					function(res){
+        						scope.userDuePayList = res.data.data;
+        						scope.params.userIds = [];
+        						if(scope.userDuePayList){
+        							angular.forEach(scope.userDuePayList, function(p, index){
+        								scope.params.userIds.push(p.userId);
+        							});
+        						}
+        					}
+        				);
+        				
+        				scope.confirm = function(){
+        					scope.processing = true;
+        					payBillDetailService.confirmPayBillDetail(scope.params).then(
+        						function(res){
+        							
+        						}
+        					)['finally'](function(){
+        						scope.processing = false;
+        						scope.$close();
+        						$scope.getPayBillWeekDetailList();
+        					});
+        				}
+        			}]
+        		});
+    		}else{//按周缴费
+    			$modal.open({
+        			templateUrl:"http://localhost/dailybill/templates/partial/pay.html",
+        			controller:['$scope', function(scope){
+        				scope.params = {};		
+        				scope.processing = false;
+        				scope.params.createStartDate = detail.createStartDate;
+        				scope.params.createEndDate = commonService.startOfDate(commonService.dateAdd(detail.createEndDate, 1)).getTime();
+        				scope.params.status = 0;
+        				payBillDetailService.getDetailAmountByUserPerWeek(scope.params).then(
+        					function(res){
+        						scope.userDuePayList = res.data.data;
+        						scope.params.userIds = [];
+        						if(scope.userDuePayList){
+        							angular.forEach(scope.userDuePayList, function(p, index){
+        								scope.params.userIds.push(p.userId);
+        							});
+        						}
+        					}
+        				);
+        				
+        				scope.confirm = function(){
+        					scope.processing = true;
+        					payBillDetailService.confirmPayBillDetail(scope.params).then(
+        						function(res){
+        							
+        						}
+        					)['finally'](function(){
+        						scope.processing = false;
+        						scope.$close();
+        						$scope.getPayBillWeekDetailList();
+        					});
+        				}
+        			}]
+        		});
+    		}
+    		
+    	}
+        
     })
 })

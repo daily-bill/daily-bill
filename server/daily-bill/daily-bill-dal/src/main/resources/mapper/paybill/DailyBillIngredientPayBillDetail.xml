@@ -41,7 +41,7 @@
 		ipbd.create_at,
 		ipbd.user_id,
 		ipbd.user_name,
-		ipbd.pay_at
+		ipbd.pay_at,
 		<if test="isRelationToPurchase != null and isRelationToPurchase == 1">
 		p.total_real_pay purchaseRealPay
 		</if>
@@ -61,6 +61,12 @@
 			</if>
 			<if test="status != null">
     			AND ipbd.status = #{status}
+    		</if>
+    		<if test="userIds != null and userIds.size != 0">
+	    		AND user_id IN
+		    	<foreach collection="userIds" open="(" close=")" item="item" separator=",">
+		    	#{item}
+		    	</foreach>
     		</if>
 		</trim>
     </sql>
@@ -82,21 +88,49 @@
     
     <select id="getIngredientPayBillDetailAmount" parameterType="IngredientPayBillDetailQuery"  resultType="IngredientPayBillDetailAmount">
     SELECT
+    	<if test="groupByType != null and groupByType != 'week'">
     	ipbd.user_id userId,
     	ipbd.user_name userName,
-    	SUM(ipbd.due_pay) totalDuePay
+    	</if>
+    	SUM(ipbd.due_pay) totalDuePay,
+    	MIN(ipbd.create_at) createStartDate,
+    	MAX(ipbd.create_at) createEndDate,
+    	MAX(ipbd.status) status 	
     FROM ingredient_pay_bill_detail ipbd
     	<include refid="selectCondition" />
     <choose>
     	<when test="groupByType != null and groupByType == 'week'">
-    		GROUP BY ipbd.user_id, ipbd.user_name, FLOOR(DATEDIFF(FROM_UNIXTIME(ipbd.create_at / 1000), '1900-01-01')/7)
+    		GROUP BY FLOOR(DATEDIFF(FROM_UNIXTIME(ipbd.create_at / 1000), '1900-01-07')/7)
+    		<if test="startIndex != null">
+    			LIMIT #{startIndex}, #{pageSize}
+    		</if>
     	</when>
     	<when test="groupByType != null and groupByType == 'all'">
     		GROUP BY ipbd.user_id, ipbd.user_name
     	</when>
+    	<when test="groupByType != null and groupByType == 'user_per_week'">
+    		GROUP BY ipbd.user_id, ipbd.user_name, FLOOR(DATEDIFF(FROM_UNIXTIME(ipbd.create_at / 1000), '1900-01-07')/7)
+    	</when>    	
     	<otherwise>
     	</otherwise>
     </choose>
     </select>
     
+    <update id="confirmPayBillDetail" parameterType="map">
+    	UPDATE ingredient_pay_bill_detail
+    	SET status = 1,
+    		pay_at = UNIX_TIMESTAMP(now())*1000
+    	WHERE user_id IN
+    	<foreach collection="userIds" open="(" close=")" item="item" separator=",">
+    	#{item}
+    	</foreach>
+    	<if test="createStartDate != null and createStartDate != ''">
+    		AND create_at >= #{createStartDate}
+    	</if>
+    	<if test="createEndDate != null and createEndDate != ''">
+    		<![CDATA[
+    		AND create_at < #{createEndDate}
+    		]]>	
+    	</if>
+    </update>
 </mapper>

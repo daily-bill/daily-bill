@@ -1,5 +1,7 @@
 package com.daily.bill.dal.paybill;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import com.daily.bill.domain.paybill.IngredientPayBillDetail;
 import com.daily.bill.domain.paybill.IngredientPayBillDetailAmount;
@@ -18,4 +20,7 @@ public interface IngredientPayBillDetailDao {
 	public int getNumberByQuery(IngredientPayBillDetailQuery query);
 	
 	public List<IngredientPayBillDetailAmount> getIngredientPayBillDetailAmount(IngredientPayBillDetailQuery query);
+
+	public int confirmPayBillDetail(@Param("userIds")List<Integer> userIds, @Param("createStartDate")Long createStartDate, @Param("createEndDate")Long createEndDate);
+
 }

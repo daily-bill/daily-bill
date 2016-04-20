@@ -7,7 +7,7 @@
         <id column="total_real_pay" property="totalRealPay"/>
         <id column="pay_at" property="payAt"/>
     </resultMap>
-    <insert id="save" parameterType="Purchase">
+    <insert id="save" parameterType="Purchase" useGeneratedKeys="true" keyProperty="id">
 	INSERT INTO purchase(
 		id,
 		total_real_pay,
@@ -51,7 +51,7 @@
     	SELECT
     	<include refid="selectColumn" />
     	FROM purchase
-    	ORDER BY id DESC
+    	ORDER BY pay_at DESC
     	LIMIT 1
     </select>
     
@@ -59,17 +59,17 @@
     	SELECT
     	<include refid="selectColumn" />
     	FROM purchase
-    	ORDER BY id
+    	ORDER BY pay_at
     	LIMIT 1
     </select>
     
     <select id="getPurchaseGroupByWeek" parameterType="PurchaseQuery" resultType="PurchaseWeekAmount">
     	SELECT
-    	UNIX_TIMESTAMP(DATE_ADD('1900-01-01', INTERVAL FLOOR((DATEDIFF(FROM_UNIXTIME(pay_at / 1000), '1900-01-01'))/7)*7 DAY))*1000 AS payStartDate,
-    	UNIX_TIMESTAMP(DATE_ADD('1900-01-01', INTERVAL FLOOR((DATEDIFF(FROM_UNIXTIME(pay_at / 1000), '1900-01-01'))/7)*7+6 DAY))*1000 AS payEndDate,
+    	UNIX_TIMESTAMP(DATE_ADD('1900-01-07', INTERVAL FLOOR((DATEDIFF(FROM_UNIXTIME(pay_at / 1000), '1900-01-07'))/7)*7 DAY))*1000 AS payStartDate,
+    	UNIX_TIMESTAMP(DATE_ADD('1900-01-07', INTERVAL FLOOR((DATEDIFF(FROM_UNIXTIME(pay_at / 1000), '1900-01-07'))/7)*7+6 DAY))*1000 AS payEndDate,
     	SUM(total_real_pay) totalPay
     	FROM purchase
     	<include refid="selectCondition"/>
-    	GROUP BY FLOOR(DATEDIFF(FROM_UNIXTIME(pay_at / 1000), '1900-01-01')/7)
+    	GROUP BY FLOOR(DATEDIFF(FROM_UNIXTIME(pay_at / 1000), '1900-01-07')/7)
     </select>
 </mapper>

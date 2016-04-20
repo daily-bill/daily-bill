@@ -2,13 +2,19 @@
     <h1>本周账单</h1>
 </div>
 <div class="weektime col-md-5">
-    <a href="">
+    <a href="" ng-click="previous()" ng-if="hasPrevious">
         <i class="fa fa-hand-o-left" title="上一周"></i>
     </a>
+    <span ng-if="!hasPrevious">
+        <i class="fa fa-hand-o-left" title="上一周"></i>
+    </span>
     <span>当前时间：{{time | date: 'yyyy年MM月dd日'}}</span>
-    <a href="">
+    <a href="" ng-click="next()" ng-if="hasNext">
         <i class="fa fa-hand-o-right" title="下一周"></i>
     </a>
+    <span ng-if="!hasNext">
+        <i class="fa fa-hand-o-right" title="上一周"></i>
+    </span>
 </div>
 <table class="table table-bordered">
     <thead>
@@ -24,7 +30,7 @@
         </tr>
         <tr>
             <td>总计：</td>
-            <td colspan="{{weekdayList.length}}" ng-bind="790"></td>
+            <td colspan="{{weekdayList.length}}" ng-bind="totalPayAmount | formatPriceFilter"></td>
         </tr>
     </tbody>
 </table>
@@ -39,9 +45,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="user in userList">
-                <td ng-bind="user.name"></td>
-                <td ng-bind="user.money"></td>
+            <tr ng-repeat="user in userDuePayList">
+                <td ng-bind="user.userName"></td>
+                <td ng-bind="user.duePay | formatPriceFilter"></td>
             </tr>
             </tbody>
         </table>

@@ -6,6 +6,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.daily.bill.common.constants.PayBillDetailGroupByTypeConstants;
 import com.daily.bill.common.enums.IngredientPayBillDetailStatus;
 import com.daily.bill.common.util.DateUtils;
 import com.daily.bill.dal.BaseTest;
@@ -45,12 +46,25 @@ public class DailyBillIngredientPayBillDetailDaoTest extends BaseTest{
 //		assertEquals(1, insertNumber);
 //	}
 	
+//	@Test
+//	public void testGetIngredientPayBillDetailAmount(){
+//		IngredientPayBillDetailQuery query = new IngredientPayBillDetailQuery();
+//		query.setCreateEndDate(DateUtils.getDateByFillFields(2016, 3, 18, 15, 21, 0).getTime());
+//		query.setCreateStartDate(DateUtils.getDateByFillFields(2016, 3, 1, 15, 21, 0).getTime());
+//		query.setStatus(IngredientPayBillDetailStatus.CREATED.getValue());
+//		List<IngredientPayBillDetailAmount> amountList = ingredientPayBillDetailDao.getIngredientPayBillDetailAmount(query);
+//		if(CollectionUtils.isNotEmpty(amountList)){
+//			for(IngredientPayBillDetailAmount amount: amountList){
+//				System.out.println(amount.getUserId() + ", " + amount.getUserName() + ", " + amount.getTotalDuePay());
+//			}
+//		}
+//	}
+	
 	@Test
-	public void testGetIngredientPayBillDetailAmount(){
+	public void testGetPayBillDetailAmountPerWeek(){
 		IngredientPayBillDetailQuery query = new IngredientPayBillDetailQuery();
-		query.setCreateEndDate(DateUtils.getDateByFillFields(2016, 3, 18, 15, 21, 0).getTime());
-		query.setCreateStartDate(DateUtils.getDateByFillFields(2016, 3, 1, 15, 21, 0).getTime());
 		query.setStatus(IngredientPayBillDetailStatus.CREATED.getValue());
+		query.setGroupByType(PayBillDetailGroupByTypeConstants.USER_PER_WEEK);
 		List<IngredientPayBillDetailAmount> amountList = ingredientPayBillDetailDao.getIngredientPayBillDetailAmount(query);
 		if(CollectionUtils.isNotEmpty(amountList)){
 			for(IngredientPayBillDetailAmount amount: amountList){

@@ -3,6 +3,7 @@ package com.daily.bill.service.paybill;
 import java.util.List;
 
 import com.daily.bill.common.model.ResultObject;
+import com.daily.bill.domain.page.Page;
 import com.daily.bill.domain.paybill.IngredientPayBillDetail;
 import com.daily.bill.domain.paybill.IngredientPayBillDetailAmount;
 import com.daily.bill.domain.paybill.IngredientPayWeekBill;
@@ -21,5 +22,9 @@ public interface DailyBillPayBillDetailService {
 	
 	public ResultObject<List<IngredientPayBillDetailAmount>> getDetailAmountByAllUser(PayBillDetailOperateParam param);
 	
+	public ResultObject<Page<IngredientPayBillDetailAmount>> getDetailAmountByWeek(IngredientPayBillDetailQuery query);
+	
 	public ResultObject<IngredientPayWeekBill> getPayWeekBill(PayBillDetailOperateParam param);
+	
+	public ResultObject<String> confirmPayBillDetailByParam(PayBillDetailOperateParam param);
 }

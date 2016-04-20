@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.daily.bill.domain.purchase.Purchase;
+import com.daily.bill.domain.user.User;
 
 /**
 *@Author Jin Rongquan
@@ -18,7 +19,7 @@ public class IngredientPayWeekBill {
 	/**
 	 * 参与人未缴款集合
 	 */
-	private Map<Integer, Double> userDuePayMap;
+	private List<UserDuePayBill> userDuePayList;
 	
 	/**
 	 * 是否有下一周
@@ -55,12 +56,12 @@ public class IngredientPayWeekBill {
 		this.hasPrevious = hasPrevious;
 	}
 
-	public Map<Integer, Double> getUserDuePayMap() {
-		return userDuePayMap;
+	public List<UserDuePayBill> getUserDuePayList() {
+		return userDuePayList;
 	}
 
-	public void setUserDuePayMap(Map<Integer, Double> userDuePayMap) {
-		this.userDuePayMap = userDuePayMap;
+	public void setUserDuePayList(List<UserDuePayBill> userDuePayList) {
+		this.userDuePayList = userDuePayList;
 	}
 	
 	

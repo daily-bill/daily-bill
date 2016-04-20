@@ -38,7 +38,12 @@ public class Purchase implements Serializable, Comparable<Purchase> {
 	}
 	@Override
 	public int compareTo(Purchase o) {
-		return this.getId().compareTo(o.getId());
+		return this.getPayAt().compareTo(o.getPayAt());
+	}
+	@Override
+	public String toString() {
+		return "Purchase [id=" + id + ", totalRealPay=" + totalRealPay + ", payAt=" + payAt + ", userList=" + userList
+				+ "]";
 	}
 	
 }

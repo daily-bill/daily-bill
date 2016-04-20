@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.daily.bill.common.model.ResultCodeConstants;
 import com.daily.bill.common.model.ResultObject;
 import com.daily.bill.common.model.ResultObjectBuilder;
+import com.daily.bill.domain.page.Page;
 import com.daily.bill.domain.paybill.IngredientPayBillDetailAmount;
 import com.daily.bill.domain.paybill.IngredientPayWeekBill;
 import com.daily.bill.domain.paybill.operate.PayBillDetailOperateParam;
+import com.daily.bill.domain.paybill.query.IngredientPayBillDetailQuery;
 import com.daily.bill.service.paybill.DailyBillPayBillDetailService;
 
 /**
@@ -43,6 +45,17 @@ public class DailyBillPayBillDetailController {
 		return ResultObjectBuilder.error(ResultCodeConstants.SYSTEM_ERROR, "获取每周每个用户的缴款单信息失败");
 	}
 	
+	@RequestMapping("/getDetailAmountByWeek")
+	@ResponseBody
+	public ResultObject<Page<IngredientPayBillDetailAmount>> getDetailAmountByWeek(HttpServletRequest request, IngredientPayBillDetailQuery query){
+		try{
+			return dailyBillPayBillDetailService.getDetailAmountByWeek(query);
+		}catch(Throwable t){
+			logger.error("获取每周的缴款单信息失败", t);
+		}
+		return ResultObjectBuilder.error(ResultCodeConstants.SYSTEM_ERROR, "获取每周的缴款单信息失败");
+	}
+	
 	@RequestMapping("/getDetailAmountByAllUser")
 	@ResponseBody
 	public ResultObject<List<IngredientPayBillDetailAmount>> getDetailAmountByAllUser(HttpServletRequest request, PayBillDetailOperateParam param){
@@ -63,6 +76,17 @@ public class DailyBillPayBillDetailController {
 			logger.error("获取周账单信息失败", t);
 		}
 		return ResultObjectBuilder.error(ResultCodeConstants.SYSTEM_ERROR, "获取周账单信息失败");
+	}
+	
+	@RequestMapping("/confirmPayBillDetail")
+	@ResponseBody
+	public ResultObject<String> confirmPayBillDetail(HttpServletRequest request, PayBillDetailOperateParam param){
+		try{
+			return dailyBillPayBillDetailService.confirmPayBillDetailByParam(param);
+		}catch(Throwable t){
+			logger.error("确认缴款失败", t);
+		}
+		return ResultObjectBuilder.error(ResultCodeConstants.SYSTEM_ERROR, "确认缴款失败");
 	}
 	
 }

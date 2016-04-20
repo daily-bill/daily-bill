@@ -17,19 +17,19 @@ define(['modules'], function (app) {
       $stateProvider
          .state('welcome',{
              url:'/welcome',
-            templateUrl: 'templates/welcome.html',
+            templateUrl: 'http://localhost/dailybill/templates/welcome.html',
          }).state('addRecord',{
              url:'/addRecord',
-             templateUrl: 'templates/addRecord.html',
-             controller: 'AddRecordController'
+             templateUrl: 'http://localhost/dailybill/templates/addRecord.html',
+             controller: 'purchaseController'
          }).state('recordList',{
              url:'/recordList',
-             templateUrl: 'templates/recordList.html',
-             controller: 'RecordListController'
+             templateUrl: 'http://localhost/dailybill/templates/recordList.html',
+             controller: 'purchaseController'
          }).state('recordStatistics',{
              url:'/recordStatistics',
-             templateUrl: 'templates/recordStatistics.html',
-             controller: 'RecordStatisticsController'
+             templateUrl: 'http://localhost/dailybill/templates/recordStatistics.html',
+             controller: 'payBillDetailController'
          })
    }).config(function (paginationConfig) { //分页配置
         paginationConfig.directionLinks = true;

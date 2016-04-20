@@ -11,14 +11,14 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>金融泉</td>
-                <td>200</td>
+            <tr ng-repeat="item in userDuePayList">
+                <td ng-bind="item.userName"></td>
+                <td ng-bind="item.totalDuePay"></td>
             </tr>
         </tbody>
     </table>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary">确认</button>
+    <button class="btn btn-primary" ng-click="confirm()">确认</button>
     <button class="btn" ng-click="$close()">取消</button>
 </div>

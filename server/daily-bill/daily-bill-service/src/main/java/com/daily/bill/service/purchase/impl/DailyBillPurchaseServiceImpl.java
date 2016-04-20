@@ -51,7 +51,6 @@ public class DailyBillPurchaseServiceImpl implements DailyBillPurchaseService {
 			purchase.setPayAt(param.getPayAt());
 			purchase.setTotalRealPay(param.getTotalRealPay());
 			purchaseDao.save(purchase);
-			purchase = purchaseDao.getLastPurchase();
 			
 			List<Integer> userIds = param.getUserIds();
 			UserQuery userQuery = new UserQuery();

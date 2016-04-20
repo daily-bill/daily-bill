@@ -15,17 +15,17 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>2016-04-10至2016-04-16</td>
-                    <td>200</td>
+                <tr ng-repeat="detail in detailList">
+                    <td>{{detail.createStartDate | getStartOfCurWeekFilter}}至{{detail.createEndDate | getEndOfCurWeekFilter}}</td>
+                    <td ng-bind="detail.totalDuePay"></td>
                     <td>
-                        <button class="btn" ng-click="pay()">缴费</button>
+                        <button class="btn" ng-click="pay(detail)" ng-if="detail.status == 0">缴费</button>
                     </td>
                 </tr>
                 </tbody>
             </table>
     </div>
     <div class="col-md-7 mt10 text-right">
-        <ul pagination ng-model="page" items-per-page="size" total-items="total" ng-change="query()"></ul>
+        <ul pagination ng-model="page" items-per-page="size" total-items="total" ng-change="getPayBillWeekDetailList()"></ul>
     </div>
 </div>

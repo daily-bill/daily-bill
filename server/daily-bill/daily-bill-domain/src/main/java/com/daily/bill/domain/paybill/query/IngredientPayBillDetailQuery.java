@@ -1,6 +1,7 @@
 package com.daily.bill.domain.paybill.query;
 
 import java.util.Date;
+import java.util.List;
 
 import com.daily.bill.domain.page.query.PageQuery;
 
@@ -12,7 +13,9 @@ public class IngredientPayBillDetailQuery extends PageQuery{
 	private Long createStartDate;
 	private Long createEndDate;
 	private Integer status;
+	private List<Integer> userIds;
 	private String groupByType;
+	private Integer isRelationToPurchase;
 	public Long getCreateStartDate() {
 		return createStartDate;
 	}
@@ -36,6 +39,18 @@ public class IngredientPayBillDetailQuery extends PageQuery{
 	}
 	public void setGroupByType(String groupByType) {
 		this.groupByType = groupByType;
+	}
+	public Integer getIsRelationToPurchase() {
+		return isRelationToPurchase;
+	}
+	public void setIsRelationToPurchase(Integer isRelationToPurchase) {
+		this.isRelationToPurchase = isRelationToPurchase;
+	}
+	public List<Integer> getUserIds() {
+		return userIds;
+	}
+	public void setUserIds(List<Integer> userIds) {
+		this.userIds = userIds;
 	}
 	
 }
