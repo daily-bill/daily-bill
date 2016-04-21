@@ -1,3 +1,7 @@
+CREATE database dailybill;
+
+use dailybill;
+
 CREATE TABLE `ingredient_pay_bill_detail` (
   `id` smallint(6) NOT NULL AUTO_INCREMENT,
   `due_pay` decimal(10,2) DEFAULT NULL,

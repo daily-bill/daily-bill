@@ -1,2 +1,4 @@
 front/.*
-sever/.*
+server/.*
+sever/*/.*
+server/*/*.iml
