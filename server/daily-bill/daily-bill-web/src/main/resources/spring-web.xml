@@ -26,6 +26,12 @@
     <!-- 开启aop支持 -->
     <aop:aspectj-autoproxy />
 
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="contentType" value="text/html"/>
+        <property name="prefix" value="/html/"/>
+        <property name="suffix" value=".html" />
+    </bean>
+
     <!-- 属性配置文件 -->
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
