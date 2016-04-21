@@ -41,5 +41,5 @@ define(['modules'], function (app) {
         paginationConfig.nextText = '下一页';
     });
 
-    app.value('project',{url:'/dailybillbg'})
+    app.value('project',{url:'/dailybillbg/'})
 });

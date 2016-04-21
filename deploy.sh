@@ -54,9 +54,11 @@ echo "request path add html/ start*****"
 
 sed -i "s/stylesheet\//html\/stylesheet\//g" `grep "stylesheet\/" -rl ${PATH_SRC_ROOT}/html`
 sed -i "s/images\//html\/images\//g" `grep "images\/" -rl ${PATH_SRC_ROOT}/html`
-sed -i "s/javascript\//html\/javascript\//g" `grep "javascript\/" -rl ${PATH_SRC_ROOT}/html`
-sed -i "s/public\//html\/public\//g" `grep "public\/" -rl ${PATH_SRC_ROOT}/html`
+#sed -i "s/javascript\//html\/javascript\//g" `grep "javascript\/" -rl ${PATH_SRC_ROOT}/html`
+sed -i "s/public\//html\/public\//g" `grep "public\/" -rl ${PATH_SRC_ROOT}/html/index.html`
 sed -i "s/templates\//html\/templates\//g" `grep "templates\/" -rl ${PATH_SRC_ROOT}/html`
+sed -i "s/app\.js/html\/app\.js/i" `grep "app\.js" -rl ${PATH_SRC_ROOT}/html/index.html`
+sed -i "s/\/dailybillbg\///i" `grep "\/dailybillbg\/" -rl ${PATH_SRC_ROOT}/html/javascript/config.js`
 
 echo "request path add html/ end*****"
 

@@ -6,7 +6,7 @@ define(['modules'], function (app) {
     	return {
     		save : function(params){
     			return $http({
-    				url: project.url + '/purchase/apply',
+    				url: project.url + 'purchase/apply',
     				method: 'post',
     				params: params
     			});
@@ -16,35 +16,35 @@ define(['modules'], function (app) {
     	return {
     		getPayWeekBill : function(params){
     			return $http({
-    				url: project.url + '/payBillDetail/getPayWeekBill',
+    				url: project.url + 'payBillDetail/getPayWeekBill',
     				method: 'get',
     				params: params
     			});
     		},
     		getDetailAmountByUserPerWeek : function(params){
     			return $http({
-    				url: project.url + '/payBillDetail/getDetailAmountByUserPerWeek',
+    				url: project.url + 'payBillDetail/getDetailAmountByUserPerWeek',
     				method: 'get',
     				params: params
     			});
     		},
     		getDetailAmountByWeek : function(params){
     			return $http({
-    				url: project.url + '/payBillDetail/getDetailAmountByWeek',
+    				url: project.url + 'payBillDetail/getDetailAmountByWeek',
     				method: 'get',
     				params: params
     			});
     		},
     		getDetailAmountByAllUser : function(params){
     			return $http({
-    				url: project.url + '/payBillDetail/getDetailAmountByAllUser',
+    				url: project.url + 'payBillDetail/getDetailAmountByAllUser',
     				method: 'get',
     				params: params
     			});
     		},
     		confirmPayBillDetail : function(params){
     			return $http({
-    				url: project.url + '/payBillDetail/confirmPayBillDetail',
+    				url: project.url + 'payBillDetail/confirmPayBillDetail',
     				method: 'post',
     				params: params
     			});
@@ -55,7 +55,7 @@ define(['modules'], function (app) {
     	return {
     		list : function(params){
         		return $http({
-        			url: project.url + '/user/list',
+        			url: project.url + 'user/list',
         			method: 'get',
         			params: params
         		});
