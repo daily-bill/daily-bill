@@ -28,7 +28,7 @@
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                <value>classpath:daily.bill.db.properties</value>
+                <value>classpath:config/daily.bill.db.properties</value>
             </list>
         </property>
         <property name="fileEncoding">
