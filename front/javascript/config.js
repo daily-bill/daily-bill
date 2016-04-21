@@ -17,18 +17,18 @@ define(['modules'], function (app) {
       $stateProvider
          .state('welcome',{
              url:'/welcome',
-            templateUrl: 'http://localhost/dailybill/templates/welcome.html',
+            templateUrl: 'templates/welcome.html',
          }).state('addRecord',{
-             url:'/addRecord',
-             templateUrl: 'http://localhost/dailybill/templates/addRecord.html',
+             url:'/addRecord/:isAdd',
+             templateUrl: 'templates/addRecord.html',
              controller: 'purchaseController'
          }).state('recordList',{
              url:'/recordList',
-             templateUrl: 'http://localhost/dailybill/templates/recordList.html',
+             templateUrl: 'templates/recordList.html',
              controller: 'purchaseController'
          }).state('recordStatistics',{
              url:'/recordStatistics',
-             templateUrl: 'http://localhost/dailybill/templates/recordStatistics.html',
+             templateUrl: 'templates/recordStatistics.html',
              controller: 'payBillDetailController'
          })
    }).config(function (paginationConfig) { //分页配置
@@ -40,4 +40,6 @@ define(['modules'], function (app) {
         paginationConfig.previousText = '上一页';
         paginationConfig.nextText = '下一页';
     });
+
+    app.value('project',{url:'/dailybillbg'})
 });

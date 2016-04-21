@@ -1,26 +1,26 @@
 <div class="page-header">
-    <h1>本周账单</h1>
+    <h1>周账单</h1>
 </div>
-<div class="weektime col-md-5">
+<div class="weektime col-md-7">
     <a href="" ng-click="previous()" ng-if="hasPrevious">
         <i class="fa fa-hand-o-left" title="上一周"></i>
     </a>
     <span ng-if="!hasPrevious">
         <i class="fa fa-hand-o-left" title="上一周"></i>
     </span>
-    <span>当前时间：{{time | date: 'yyyy年MM月dd日'}}</span>
+    <span>账单时间段：{{weekdayList[0].dateTime | date: 'yyyy年MM月dd日'}} - {{weekdayList[weekdayList.length - 1].dateTime | date: 'yyyy年MM月dd日'}}</span>
     <a href="" ng-click="next()" ng-if="hasNext">
         <i class="fa fa-hand-o-right" title="下一周"></i>
     </a>
     <span ng-if="!hasNext">
-        <i class="fa fa-hand-o-right" title="上一周"></i>
+        <i class="fa fa-hand-o-right" title="下一周"></i>
     </span>
 </div>
 <table class="table table-bordered">
     <thead>
         <tr>
             <th></th>
-            <th ng-repeat="weekday in weekdayList">{{weekday}}</th>
+            <th ng-repeat="weekday in weekdayList">{{weekday.dateTime | date: 'yyyy-MM-dd'}}({{weekday.weekDay | weekFilter}})</th>
         </tr>
     </thead>
     <tbody>

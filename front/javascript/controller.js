@@ -2,10 +2,9 @@
  * Created by stefan on 16-4-14.
  */
 define(['modules'], function (app) {
-    app.controller('purchaseController', function ($scope, $filter, purchaseService, userService, payBillDetailService, commonService) {
-        $scope.$emit('displaySave', function () {
-        });
+    app.controller('purchaseController', function ($scope, $state, $stateParams, $filter, purchaseService, userService, payBillDetailService, commonService) {
         $scope.entity = {};
+
         var formatPriceFilter = $filter('formatPriceFilter');
         
         userService.list().then(
@@ -29,7 +28,7 @@ define(['modules'], function (app) {
         	$scope.entity.payAt = $scope.entity.payAt.getTime();
         	purchaseService.save($scope.entity).then(
         		function(res){
-        			
+        			$state.go('recordList');
         		},function(rej){
         			
         		}
@@ -40,11 +39,13 @@ define(['modules'], function (app) {
             	});
         	});
         };
-        
+
+		$stateParams.isAdd && $scope.$emit('displaySave', $scope.save);
+
         //周账单查询
         $scope.params = {};
         $scope.weekBillQuery = function(){
-            $scope.weekdayList = ["周日","周一","周二","周三","周四","周五","周六"];
+            $scope.weekdayList = []; //"周日","周一","周二","周三","周四","周五","周六"
         	$scope.itemList = [{name : "参与人", list: new Array(7)}, 
         	                   {name : "金额", list: new Array(7)},
         	                   {name : "人均", list: new Array(7)}];
@@ -57,11 +58,18 @@ define(['modules'], function (app) {
                 $scope.params.createStartDate = $scope.firstDayOfCurWeek.getTime();
                 $scope.params.createEndDate = $scope.endPlusOneDayOfCurWeek.getTime();
         	}
+
+			for(var date = $scope.params.createStartDate; date < $scope.params.createEndDate; date = commonService.startOfDate(commonService.dateAdd(date, 1))){
+				var dateObj = new Date(date);
+				$scope.weekdayList.push({
+					weekDay: dateObj.getDay(),
+					dateTime: date
+				})
+			}
         	    	
         	payBillDetailService.getPayWeekBill($scope.params).then(
         		function(res){
         			$scope.payWeekBill = res.data.data;
-        			console.log($scope.payWeekBill);
         			$scope.totalPayAmount = 0;
         			//填充itemList并总计金额
         			angular.forEach($scope.payWeekBill.purchaseList, function(p, index){
@@ -84,8 +92,8 @@ define(['modules'], function (app) {
         			//未缴款人信息
         			$scope.userDuePayList = $scope.payWeekBill.userDuePayList;
         			//控制上一周下一周的按钮
-        			$scope.hasNext = $scope.payWeekBill.hasNext == 1 ? true : false;
-        			$scope.hasPrevious = $scope.payWeekBill.hasPrevious == 1 ? true : false;
+        			$scope.hasNext = $scope.payWeekBill.hasNext == 1;
+        			$scope.hasPrevious = $scope.payWeekBill.hasPrevious == 1;
         		}
         	);       
         };
@@ -128,7 +136,7 @@ define(['modules'], function (app) {
     	$scope.pay = function(detail){
     		if(!detail){ //缴所有
     			$modal.open({
-        			templateUrl:"http://localhost/dailybill/templates/partial/pay.html",
+        			templateUrl:"templates/partial/pay.html",
         			controller:['$scope', function(scope){
         				scope.params = {};		
         				scope.processing = false;
@@ -161,7 +169,7 @@ define(['modules'], function (app) {
         		});
     		}else{//按周缴费
     			$modal.open({
-        			templateUrl:"http://localhost/dailybill/templates/partial/pay.html",
+        			templateUrl:"templates/partial/pay.html",
         			controller:['$scope', function(scope){
         				scope.params = {};		
         				scope.processing = false;

@@ -2,60 +2,60 @@
  * Created by stefan on 16-4-14.
  */
 define(['modules'], function (app) {
-    app.factory('purchaseService', function ($http) {
+    app.factory('purchaseService', function ($http, project) {
     	return {
     		save : function(params){
     			return $http({
-    				url: '/dailybill/purchase/apply',
+    				url: project.url + '/purchase/apply',
     				method: 'post',
     				params: params
     			});
     		}
     	}
-    }).factory('payBillDetailService', function ($http) {
+    }).factory('payBillDetailService', function ($http,project) {
     	return {
     		getPayWeekBill : function(params){
     			return $http({
-    				url: '/dailybill/payBillDetail/getPayWeekBill',
+    				url: project.url + '/payBillDetail/getPayWeekBill',
     				method: 'get',
     				params: params
     			});
     		},
     		getDetailAmountByUserPerWeek : function(params){
     			return $http({
-    				url: '/dailybill/payBillDetail/getDetailAmountByUserPerWeek',
+    				url: project.url + '/payBillDetail/getDetailAmountByUserPerWeek',
     				method: 'get',
     				params: params
     			});
     		},
     		getDetailAmountByWeek : function(params){
     			return $http({
-    				url: '/dailybill/payBillDetail/getDetailAmountByWeek',
+    				url: project.url + '/payBillDetail/getDetailAmountByWeek',
     				method: 'get',
     				params: params
     			});
     		},
     		getDetailAmountByAllUser : function(params){
     			return $http({
-    				url: '/dailybill/payBillDetail/getDetailAmountByAllUser',
+    				url: project.url + '/payBillDetail/getDetailAmountByAllUser',
     				method: 'get',
     				params: params
     			});
     		},
     		confirmPayBillDetail : function(params){
     			return $http({
-    				url: '/dailybill/payBillDetail/confirmPayBillDetail',
+    				url: project.url + '/payBillDetail/confirmPayBillDetail',
     				method: 'post',
     				params: params
     			});
     		}
     		
     	}
-    }).factory('userService', function ($http) {
+    }).factory('userService', function ($http, project) {
     	return {
     		list : function(params){
         		return $http({
-        			url: '/dailybill/user/list',
+        			url: project.url + '/user/list',
         			method: 'get',
         			params: params
         		});
