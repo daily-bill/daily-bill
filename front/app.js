@@ -43,7 +43,7 @@ require.config({
         }*/
     },
     //deps:['bootstrap'], //require初始化完成后，就会执行此js文件
-    urlArgs: "bust=" + (new Date()).getTime()
+    //urlArgs: "bust=" + (new Date()).getTime()
 });
 
 require(['domReady','angular','bootstrap','config','service','filter','directive','controller'], function (domReady, angular) {
