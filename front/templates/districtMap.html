@@ -1,0 +1,46 @@
+<style type="text/css">
+    #tip {
+        background-color: #fff;
+        padding:0 10px;
+        border: 1px solid silver;
+        box-shadow: 3px 4px 3px 0px silver;
+        position: absolute;
+        font-size: 12px;
+        right: 10px;
+        top: 5px;
+        border-radius: 3px;
+        line-height: 36px;
+    }
+    html, body{ margin:0; height:100%; }
+</style>
+<div id="mapContainer" style="width: 100%;height: 100%;position:absolute"></div>
+<div id="tip">
+	<form class="form-inline">
+		<div class="form-group" ng-show="!close">
+			省：<select class="form-control" ng-model="province" ng-options="item as item.name for item in provinceList" ng-change="districtChange(province)">
+    			<option value="">请选择</option>
+    		</select>
+		</div>
+		<div class="form-group" ng-show="!close">
+			市：<select class="form-control" ng-model="city" ng-options="item as item.name for item in province.districtList" ng-change="districtChange(city)">
+    			<option value="">请选择</option>
+    		</select>
+		</div>
+		<div class="form-group" ng-show="!close">
+			区：<select class="form-control" ng-model="district" ng-options="item as item.name for item in city.districtList" ng-change="districtChange(district)">
+    			<option value="">请选择</option>
+    		</select>
+		</div>
+		<!-- <div class="form-group" ng-show="!close">
+			街道：<select class="form-control" ng-model="street" ng-options="item as item.name for item in district.districtList" ng-change="districtChange(street)">
+    			<option value="">请选择</option>
+    		</select>
+		</div> -->
+		<div class="form-group">
+			<a href="" ng-click="close = !close" style="text-decoration: none;color: #5ecbeb">
+				<span ng-if="!close">收起</span>
+				<span ng-if="close">放开</span>
+			</a>
+		</div>
+	</form>
+</div>
