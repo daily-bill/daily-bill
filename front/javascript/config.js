@@ -30,6 +30,10 @@ define(['modules'], function (app) {
              url:'/recordStatistics',
              templateUrl: 'templates/recordStatistics.html',
              controller: 'payBillDetailController'
+         }).state('districtMap', {
+             url:'/districtMap',
+             templateUrl: 'templates/districtMap.html',
+             controller: 'districtMapController'
          })
    }).config(function (paginationConfig) { //分页配置
         paginationConfig.directionLinks = true;

@@ -14,7 +14,7 @@
 </head>
 <body>
 
-    <nav class="nav navbar-fixed-top">
+    <nav class="nav navbar-fixed-top" ng-if="!isMap">
         <ul class="list-inline">
             <li class="home">
                 <a href="#">
@@ -44,10 +44,10 @@
             <a href="" ng-click="save()">保存</a>
         </div>
     </nav>
-    <div class="container">
+    <div class="container" ng-class="{'container':!isMap}">
         <div ui-view></div>
     </div>
-    <nav class="nav navbar-fixed-bottom text-center">
+    <nav class="nav navbar-fixed-bottom text-center" ng-if="!isMap">
         <span>©2016 江左盟</span>
     </nav>
     <!--requireJs-->
